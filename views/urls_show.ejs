@@ -6,13 +6,17 @@
 
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-  <title>TinyApp</title>
+  <title>URL-TinyApp</title>
 </head>
 <body style="font-size:20px; padding:50px;">
     <!-- Add EJS code here -->
-      <p>Long URL: <%= longURL %></p>
-      <p>Shortened form: <%= shortURL %></p>
+    <% include ./partials/_header %>
+    <a href="#">Create New TinyURL</a>
 
-    <a href="#">Shortening a new HTML?</a>
+    <p>
+      <h2>TinyURL for <%= longURL %></h2>
+      <h4><%= shortURL %></h4>
+    </p>
+
 </body>
 </html>

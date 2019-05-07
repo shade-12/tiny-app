@@ -6,16 +6,22 @@
 
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-  <title>TinyApp</title>
+  <title>URLs-TinyApp</title>
 </head>
 <body style="font-size:20px; padding:50px;">
     <!-- Add EJS code here -->
-    <% if(urls){%>
-      <% for(var url in urls){ %>
-          <li>URL: <%= urls[url] %>, Shortened form: <%= url %></li>
-          <% }%>
-    <% }%>
+    <% include ./partials/_header %>
+    <a href="#">Create New TinyURL</a>
 
-    <a href="#">Shortening a new HTML?</a>
+    <p>
+      <h2>My URLs</h2>
+
+      <% if(urls){%>
+        <% for(var url in urls){ %>
+          <li><strong><%= url %></strong>: <%= urls[url] %></li>
+          <% }%>
+      <% }%>
+    </p>
+
 </body>
 </html>
