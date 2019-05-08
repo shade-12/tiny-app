@@ -1,12 +1,14 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const PORT = 8080; // default port 8080
 
 app.set("view engine", "ejs");
 
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieParser());
 app.use(morgan("dev"));
 
 const urlDatabase = {
