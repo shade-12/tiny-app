@@ -17,10 +17,19 @@
       <h2>My URLs</h2>
 
       <% if(urls){%>
-        <% for(var url in urls){ %>
-          <li><strong><%= url %></strong>: <%= urls[url] %></li>
-          <% }%>
+        <% for(var shorturl in urls){ %>
+          <li>
+            <strong><%= shorturl %></strong>
+            :
+            <%= urls[shorturl] %>
+            <form method="POST" action="/urls/<%= shorturl %>/delete">
+              <button type="submit" class="btn btn-primary">Delete!!!
+              </button>
+            </form>
+          </li>
+        <% }%>
       <% }%>
+
     </p>
 
 </body>
