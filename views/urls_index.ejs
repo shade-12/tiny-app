@@ -25,12 +25,15 @@
               <strong><%= shorturl %></strong>
               :
               <%= urls[shorturl] %>
+              <a href="/urls/<%= shorturl%>">Edit</a>
+              <ul>
               <form method="POST" action="/urls/<%= shorturl %>/delete">
                 <button type="submit" class="btn btn-primary">
                   <i class="fa fa-trash"></i>
                   Delete
                 </button>
               </form>
+            </ul>
             </li>
         <% }%>
       <% }%>
