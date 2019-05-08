@@ -16,6 +16,13 @@
     <p>
       <h2>TinyURL for <%= longURL %></h2>
       <h4><%= shortURL %></h4>
+      <form class="form-inline" action="/urls" method="POST">
+      <div class="form-group mb-2">
+        <label for="longURL">Edit URL:</label>
+        <input class="form-control" type="text" name="longURL" placeholder="http://" style="width: 300px; margin: 1em">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
     </p>
 
 </body>

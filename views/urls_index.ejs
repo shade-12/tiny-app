@@ -6,6 +6,9 @@
 
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+  <!-- icon library: for delete icon-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <title>URLs-TinyApp</title>
 </head>
 <body style="font-size:20px; padding:50px;">
@@ -18,15 +21,17 @@
 
       <% if(urls){%>
         <% for(var shorturl in urls){ %>
-          <li>
-            <strong><%= shorturl %></strong>
-            :
-            <%= urls[shorturl] %>
-            <form method="POST" action="/urls/<%= shorturl %>/delete">
-              <button type="submit" class="btn btn-primary">Delete!!!
-              </button>
-            </form>
-          </li>
+            <li>
+              <strong><%= shorturl %></strong>
+              :
+              <%= urls[shorturl] %>
+              <form method="POST" action="/urls/<%= shorturl %>/delete">
+                <button type="submit" class="btn btn-primary">
+                  <i class="fa fa-trash"></i>
+                  Delete
+                </button>
+              </form>
+            </li>
         <% }%>
       <% }%>
 
