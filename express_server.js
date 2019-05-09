@@ -99,13 +99,22 @@ app.get("/register", (req, res) => {
 })
 
 app.post("/register", (req, res) => {
-  const id = generateRandomString();
-  users[id] = {};
-  users[id].id = id;
-  users[id].email = req.body.email;
-  users[id].password = req.body.password;
-  res.cookie('user_id', id);
-  res.redirect('/urls/');
+  if(req.body.email === '' || req.body.password === ''){
+    res.status(400).send('Bad Request');
+  }else{
+    for(let id in users){
+      if(req.body.email === users[id].email){
+        res.status(400).send('Bad Request');
+      }
+    }
+    const id = generateRandomString();
+    users[id] = {};
+    users[id].id = id;
+    users[id].email = req.body.email;
+    users[id].password = req.body.password;
+    res.cookie('user_id', id);
+    res.redirect('/urls/');
+  }
 })
 
 app.listen(PORT, () => {
