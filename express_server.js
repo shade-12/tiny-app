@@ -20,7 +20,7 @@ const urlDatabase = {
 const users = {};
 
 app.get("/", (req, res) => {
-  if(req.cookies["username"]){
+  if(req.cookies["user_id"]){
     res.redirect('/urls');
   }else{
     res.redirect('/login');
@@ -82,7 +82,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   res.redirect("/urls");
 })
 
-//set a cookie named username to the value submitted in the request body via the login form.
+//set a cookie named user_id to the value submitted in the request body via the login form.
 // redirect the browser back to the /urls page
 app.post("/login", (req, res) => {
   let id = emailExists(req.body.email);
@@ -93,11 +93,13 @@ app.post("/login", (req, res) => {
         res.status(403).send('Invalid password!');
       }
       res.cookie('user_id', id);
+      res.redirect('/urls')
      }
   });
 
 app.get("/login", (req, res) => {
-  res.render("login");
+  let templateVars = {user: userLookUp(req.cookies["user_id"])};
+  res.render("login", templateVars);
 })
 
 app.post("/logout", (req, res) => {
@@ -106,7 +108,8 @@ app.post("/logout", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-  res.render("register");
+  let templateVars = {user: userLookUp(req.cookies["user_id"])};
+  res.render("register", templateVars);
 })
 
 app.post("/register", (req, res) => {
