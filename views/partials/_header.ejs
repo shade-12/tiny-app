@@ -13,7 +13,11 @@
 <body>
   <h1>TinyApp</h1>
 
-  <% if(user.email){ %>
+  <form class="form-inline" action="/register">
+      <button type="submit" class="btn btn-primary"><i class="fa fa-address-book"></i>  Register</button>
+  </form>
+
+  <% if(user){ %>
     <p><h3>Logged In As: <%= user.email%></h3></p>
     <form class="form-inline" action="/logout" method="POST">
       <div class="form-group mb-2">
@@ -21,13 +25,11 @@
       </div>
     </form>
   <% }else{ %>
-    <form class="form-inline" action="/login" method="POST">
-        <div class="form-group mb-2">
-          <label for="username">User:</label>
-          <input class="form-control" type="text" name="username" placeholder="Username here" style="width: 300px; margin: 1em">
+    <p>
+    <form class="form-inline" action="/login">
           <button type="submit" class="btn btn-primary"><i class="fa fa-address-book"></i>  Log In</button>
-        </div>
     </form>
+    </p>
   <% } %>
 </body>
 </html>

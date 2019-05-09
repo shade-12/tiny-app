@@ -85,9 +85,16 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 //set a cookie named username to the value submitted in the request body via the login form.
 // redirect the browser back to the /urls page
 app.post("/login", (req, res) => {
-  res.cookie('username', req.body.username);
-  res.redirect('/urls');
-});
+  let id = emailExists(req.body.email);
+    if(!id){
+      res.status(403).send('E-mail cannot be found!');
+    }else{
+      if(req.body.password !== users[id].password){
+        res.status(403).send('Invalid password!');
+      }
+      res.cookie('user_id', id);
+     }
+  });
 
 app.get("/login", (req, res) => {
   res.render("login");
@@ -103,7 +110,7 @@ app.get("/register", (req, res) => {
 })
 
 app.post("/register", (req, res) => {
-  if(req.body.email === '' || req.body.password === '' || emailExists(req.body.email) === 1){
+  if(req.body.email === '' || req.body.password === '' || emailExists(req.body.email)){
     res.status(400).send('Bad Request');
   }else{
     const id = generateRandomString();
@@ -133,10 +140,10 @@ function generateRandomString() {
 function emailExists(email){
   for(let id in users){
     if(email === users[id].email){
-      return 1;
+      return id;
     }
   }
-  return 0;
+  return;
 }
 
 function userLookUp(userID){
