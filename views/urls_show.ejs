@@ -7,35 +7,37 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
-  <!-- icon library: for update icon-->
+  <!-- icon library: for UPDATE icon-->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <title>URL-TinyApp</title>
 </head>
 <body style="font-size:20px; padding:50px;">
-    <!-- Add EJS code here -->
     <% include partials/_header %>
 
     <p>
-    <% if(user){ let count = 0;%>
-      <% for(let shorturl in urls){%>
-        <% if(shortURL === shorturl){%>
+    <% if(user){ let count = 0; %>
+      <% for(let shorturl in urls){ %>
+        <% if(shortURL === shorturl){ %>
           <h2>TinyURL for <%= urls[shorturl] %> : </h2>
             <h4><%= shortURL %></h4>
               <form class="form-inline" action="/urls/<%= shortURL %>" method="POST">
                 <div class="form-group mb-2">
-                <label for="newLongURL">Edit URL:</label>
-                <input class="form-control" type="text" name="newLongURL" placeholder=<%= urls[shorturl] %> style="width: 300px; margin: 1em">
-                <button type="submit" class="btn btn-primary"><i class="fa fa-edit"></i>  Update</button>
+                  <label for="newLongURL">Edit URL:</label>
+                  <input class="form-control" type="text" name="newLongURL" placeholder=<%= urls[shorturl] %> style="width: 300px; margin: 1em">
+                  <button type="submit" class="btn btn-primary"><i class="fa fa-edit"></i>  Update</button>
                 </div>
               </form>
-          <% count++; break; } %>
-      <% } if(count === 0){ %>
-
-      <p>
-        <h2>Oops! This doesn't look like one of your URLs!</h2>
-      </p>
-
-    <% }} else{ %>
+          <% count++; break; }} if(count === 0){ let counter = 0;%>
+            <% for(let id in allURLs){ %>
+            <% if(shortURL === id){ %>
+               <p>
+                 <h2>Oops! This doesn't look like one of your URLs!</h2>
+               </p>
+            <% counter++; break; }} if(!counter){ %>
+               <p>
+                 <h2>Boom! There's no such thing!</h2>
+               </p>
+    <% }}} else{ %>
       <p>
         <h2>Oops! Looks like you have not login!</h2>
       </p>

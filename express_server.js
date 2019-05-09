@@ -82,7 +82,8 @@ app.get("/urls/:shortURL", (req, res) => {
   let templateVars = {
     urls: urlsForUser(req.session.user_id),
     shortURL: req.params.shortURL,
-    user: userLookUp(req.session.user_id)
+    user: userLookUp(req.session.user_id),
+    allURLs: urlDatabase
   };
   res.render("urls_show", templateVars);
 });
@@ -97,10 +98,17 @@ app.post("/urls/:shortURL", (req, res) => {
   }
 })
 
-//short URL that can be accessed by annyone, even if users are not logged in
+//short URL can be accessed by anyone, even if users are not logged in
 app.get("/u/:shortURL", (req, res) => {
-  const longurl = urlDatabase[req.params.shortURL].longURL;
-  res.redirect(longurl);
+  const shorturl = req.params.shortURL;
+  let count = 0;
+  for(let id in urlDatabase){
+    if(id === shorturl){
+      const longurl = urlDatabase[id].longURL;
+      res.redirect(longurl);
+    }
+  }
+    res.send("<h1>Can't find what you are looking for :|</h1>");
 })
 
 //delete an url from urlDatabase
@@ -119,10 +127,10 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 app.post("/login", (req, res) => {
   let id = emailExists(req.body.email);
     if(!id){
-      res.status(403).send("E-mail cannot be found!");
+      res.status(403).send("<h1>E-mail cannot be found :|</h1>");
     }else{
       if(!bcrypt.compareSync(req.body.password, users[id].password)){
-        res.status(403).send("Invalid password!");
+        res.status(403).send("<h1>Invalid password :|</h1>");
       }
       req.session.user_id = id;
       res.redirect("/urls");
@@ -130,8 +138,12 @@ app.post("/login", (req, res) => {
   });
 
 app.get("/login", (req, res) => {
-  let templateVars = {user: userLookUp(req.session.user_id)};
-  res.render("login", templateVars);
+  if(req.session.user_id){
+    res.redirect("/urls");
+  }else{
+    let templateVars = {user: userLookUp(req.session.user_id)};
+    res.render("login", templateVars);
+  }
 })
 
 app.post("/logout", (req, res) => {
@@ -140,13 +152,21 @@ app.post("/logout", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
+  if(req.session.user_id){
+    res.redirect("/urls");
+  }else{
   let templateVars = {user: userLookUp(req.session.user_id)};
   res.render("register", templateVars);
+  }
 })
 
 app.post("/register", (req, res) => {
   if(req.body.email === "" || req.body.password === "" || emailExists(req.body.email)){
-    res.status(400).send("Error!");
+    if(emailExists(req.body.email)){
+      res.status(400).send("<h2>Error 400 :|<h2><p><h4>You already had an account :|</h4></p>");
+    }else{
+      res.status(400).send("<h2>Error 400 :|<h2><p><h4>Don't leave any of the field blank! That's not FUNNY :|</h4></p>");
+    }
   }else{
     const id = generateRandomString();
     users[id] = {};
