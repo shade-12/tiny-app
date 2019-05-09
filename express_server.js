@@ -1,6 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
+const cookieSession = require("cookie-session");
 const bcrypt = require("bcrypt");
 const morgan = require("morgan");
 const app = express();
@@ -9,7 +9,10 @@ const PORT = 8080; // default port 8080
 app.set("view engine", "ejs");
 
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(cookieParser());
+app.use(cookieSession({
+  name: "session",
+  keys: ["pizza"]
+}));
 app.use(morgan("dev"));
 
 const urlDatabase = {};
@@ -34,7 +37,7 @@ const users = {};
 // }
 
 app.get("/", (req, res) => {
-  if(req.cookies["user_id"]){
+  if(req.session["user_id"]){
     res.redirect("/urls");
   }else{
     res.redirect("/login");
@@ -51,17 +54,17 @@ app.get("/hello", (req, res) => {
 
 app.get("/urls", (req, res) => {
   let templateVars = {
-    urls: urlsForUser(req.cookies["user_id"]),
-    user: userLookUp(req.cookies["user_id"])
+    urls: urlsForUser(req.session.user_id),
+    user: userLookUp(req.session.user_id)
   };
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
-  if(!req.cookies["user_id"]){
+  if(!req.session.user_id){
     res.redirect("/login");
   }else{
-     let templateVars = {user: userLookUp(req.cookies["user_id"])};
+     let templateVars = {user: userLookUp(req.session.user_id)};
      res.render("urls_new", templateVars);
   }
 });
@@ -71,21 +74,21 @@ app.post("/urls", (req, res) => {
   const id = generateRandomString();
   urlDatabase[id] = {};
   urlDatabase[id].longURL = req.body.longURL;
-  urlDatabase[id].userID = req.cookies["user_id"];
+  urlDatabase[id].userID = req.session.user_id;
   res.redirect('/urls/' + id);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
   let templateVars = {
-    urls: urlsForUser(req.cookies["user_id"]),
+    urls: urlsForUser(req.session.user_id),
     shortURL: req.params.shortURL,
-    user: userLookUp(req.cookies["user_id"])
+    user: userLookUp(req.session.user_id)
   };
   res.render("urls_show", templateVars);
 });
 
 app.post("/urls/:shortURL", (req, res) => {
-  if(req.cookies["user_id"]){
+  if(req.session.user_id){
     const newLongURL = req.body.newLongURL;
     urlDatabase[req.params.shortURL].longURL = newLongURL;
     res.redirect("/urls");
@@ -94,6 +97,7 @@ app.post("/urls/:shortURL", (req, res) => {
   }
 })
 
+//short URL that can be accessed by annyone, even if users are not logged in
 app.get("/u/:shortURL", (req, res) => {
   const longurl = urlDatabase[req.params.shortURL].longURL;
   res.redirect(longurl);
@@ -102,7 +106,7 @@ app.get("/u/:shortURL", (req, res) => {
 //delete an url from urlDatabase
 //then redirect client back to index page
 app.post("/urls/:shortURL/delete", (req, res) => {
-  if(req.cookies["user_id"]){
+  if(req.session.user_id){
     delete urlDatabase[req.params.shortURL];
     res.redirect("/urls");
   }else{
@@ -120,23 +124,23 @@ app.post("/login", (req, res) => {
       if(!bcrypt.compareSync(req.body.password, users[id].password)){
         res.status(403).send("Invalid password!");
       }
-      res.cookie("user_id", id);
+      req.session.user_id = id;
       res.redirect("/urls");
      }
   });
 
 app.get("/login", (req, res) => {
-  let templateVars = {user: userLookUp(req.cookies["user_id"])};
+  let templateVars = {user: userLookUp(req.session.user_id)};
   res.render("login", templateVars);
 })
 
 app.post("/logout", (req, res) => {
-  res.clearCookie("user_id");
+  req.session = null;
   res.redirect("/urls");
 });
 
 app.get("/register", (req, res) => {
-  let templateVars = {user: userLookUp(req.cookies["user_id"])};
+  let templateVars = {user: userLookUp(req.session.user_id)};
   res.render("register", templateVars);
 })
 
@@ -151,9 +155,8 @@ app.post("/register", (req, res) => {
     const password = req.body.password;
     const hashedPassword = bcrypt.hashSync(password, 10);
     users[id].password = hashedPassword;
-    res.cookie("user_id", id);
+    req.session.user_id = id;
     res.redirect("/urls");
-    console.log(users);
   }
 })
 
