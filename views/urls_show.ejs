@@ -16,10 +16,10 @@
     <% include partials/_header %>
 
     <p>
-    <% if(user){%>
+    <% if(user){ let count = 0;%>
       <% for(let shorturl in urls){%>
         <% if(shortURL === shorturl){%>
-          <h2>TinyURL for <%= urls[shorturl] %></h2>
+          <h2>TinyURL for <%= urls[shorturl] %> : </h2>
             <h4><%= shortURL %></h4>
               <form class="form-inline" action="/urls/<%= shortURL %>" method="POST">
                 <div class="form-group mb-2">
@@ -28,14 +28,19 @@
                 <button type="submit" class="btn btn-primary"><i class="fa fa-edit"></i>  Update</button>
                 </div>
               </form>
-          <% break; } %>
-    <% } %>
+          <% count++; break; } %>
+      <% } if(count === 0){ %>
 
       <p>
         <h2>Oops! This doesn't look like one of your URLs!</h2>
       </p>
 
+    <% }} else{ %>
+      <p>
+        <h2>Oops! Looks like you have not login!</h2>
+      </p>
       <%}%>
+
     </p>
 
 </body>

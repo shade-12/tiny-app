@@ -1,8 +1,8 @@
 const express = require("express");
-const app = express();
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
+const app = express();
 const PORT = 8080; // default port 8080
 
 app.set("view engine", "ejs");
@@ -84,9 +84,13 @@ app.get("/urls/:shortURL", (req, res) => {
 });
 
 app.post("/urls/:shortURL", (req, res) => {
-  const newLongURL = req.body.newLongURL;
-  urlDatabase[req.params.shortURL] = newLongURL;
-  res.redirect("/urls");
+  if(req.cookies["user_id"]){
+    const newLongURL = req.body.newLongURL;
+    urlDatabase[req.params.shortURL].longURL = newLongURL;
+    res.redirect("/urls");
+  }else{
+    res.redirect("/login");
+  }
 })
 
 app.get("/u/:shortURL", (req, res) => {
@@ -97,8 +101,12 @@ app.get("/u/:shortURL", (req, res) => {
 //delete an url from urlDatabase
 //then redirect client back to index page
 app.post("/urls/:shortURL/delete", (req, res) => {
-  delete urlDatabase[req.params.shortURL];
-  res.redirect("/urls");
+  if(req.cookies["user_id"]){
+    delete urlDatabase[req.params.shortURL];
+    res.redirect("/urls");
+  }else{
+    res.redirect("/login");
+  }
 })
 
 //set a cookie named user_id to the value submitted in the request body via the login form.
@@ -133,7 +141,7 @@ app.get("/register", (req, res) => {
 
 app.post("/register", (req, res) => {
   if(req.body.email === '' || req.body.password === '' || emailExists(req.body.email)){
-    res.status(400).send('Bad Request');
+    res.status(400).send('Error!');
   }else{
     const id = generateRandomString();
     users[id] = {};
