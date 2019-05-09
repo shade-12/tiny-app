@@ -38,13 +38,13 @@ app.get("/hello", (req, res) => {
 app.get("/urls", (req, res) => {
   let templateVars = {
     urls: urlDatabase,
-    username: req.cookies["username"]
+    user: userLookUp(req.cookies["user_id"])
   };
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
-  let templateVars = {username: req.cookies["username"]};
+  let templateVars = {user: userLookUp(req.cookies["user_id"])};
   res.render("urls_new", templateVars);
 });
 
@@ -59,7 +59,7 @@ app.get("/urls/:shortURL", (req, res) => {
   let templateVars = {
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL],
-    username: req.cookies["username"]
+    user: userLookUp(req.cookies["user_id"])
   };
   res.render("urls_show", templateVars);
 });
@@ -99,20 +99,15 @@ app.get("/register", (req, res) => {
 })
 
 app.post("/register", (req, res) => {
-  if(req.body.email === '' || req.body.password === ''){
+  if(req.body.email === '' || req.body.password === '' || emailExists(req.body.email) === 1){
     res.status(400).send('Bad Request');
   }else{
-    for(let id in users){
-      if(req.body.email === users[id].email){
-        res.status(400).send('Bad Request');
-      }
-    }
     const id = generateRandomString();
     users[id] = {};
     users[id].id = id;
     users[id].email = req.body.email;
     users[id].password = req.body.password;
-    res.cookie('user_id', id);
+    res.cookie("user_id", id);
     res.redirect('/urls/');
   }
 })
@@ -131,3 +126,19 @@ function generateRandomString() {
   return result;
 }
 
+function emailExists(email){
+  for(let id in users){
+    if(email === users[id].email){
+      return 1;
+    }
+  }
+  return 0;
+}
+
+function userLookUp(userID){
+  for(let id in users){
+    if(userID === id){
+      return users[id];
+    }
+  }
+}
