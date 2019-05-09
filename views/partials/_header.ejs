@@ -15,11 +15,12 @@
 
   <% if(user){ %>
     <p>
-    <form class="button-inline" action="/urls">
+    <form class="form-inline" action="/urls">
       <div class="form-group mb-2">
-      <button type="submit" class="btn btn-primary"><i class="  fa fa-link"></i>  URLs</button>
-    </form> | <form class="button-inline" action="/urls/new">
-      <button type="submit" class="btn btn-primary"><i class="  fa fa-copy"></i>  Create New Tiny URL</button>
+      <button type="submit" class="btn btn-primary"><i class="fa fa-link"></i>  URLs</button>
+    </form> |
+    <form class="form-inline" action="/urls/new">
+      <button type="submit" class="btn btn-primary"><i class="fa fa-copy"></i> Create New Tiny URL</button>
       </div>
     </form>
     </p>
@@ -35,7 +36,8 @@
     <form class="form-inline" action="/login">
       <div class="form-group mb-2">
       <button type="submit" class="btn btn-primary"><i class="fa fa-address-book"></i>  Log In</button>
-    </form> | <form class="form-inline" action="/register">
+    </form> |
+    <form class="form-inline" action="/register">
       <button type="submit" class="btn btn-primary"><i class="fa fa-user-plus"></i>  Register</button>
       </div>
     </form>

@@ -44,8 +44,12 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  let templateVars = {user: userLookUp(req.cookies["user_id"])};
-  res.render("urls_new", templateVars);
+  if(!req.cookies["user_id"]){
+    res.redirect('/login');
+  }else{
+     let templateVars = {user: userLookUp(req.cookies["user_id"])};
+     res.render("urls_new", templateVars);
+  }
 });
 
 //generate id for new URL which we receive from the form, then store them in urlDatabase

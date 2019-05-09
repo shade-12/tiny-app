@@ -24,13 +24,17 @@
               <strong><%= shorturl %></strong>
               :
               <%= urls[shorturl] %>
-              <a href="/urls/<%= shorturl%>">Edit</a>
               <ul>
-              <form method="POST" action="/urls/<%= shorturl %>/delete">
-                <button type="submit" class="btn btn-primary">
+              <form class="form-inline" action="/urls/<%= shorturl%>">
+               <div class="form-group mb-2">
+                  <button type="submit" class="btn btn-primary"><i class="fa fa-edit"></i>  Edit</button>
+              </form> |
+              <form class="form-inline" method="POST" action="/urls/<%= shorturl %>/delete">
+                  <button type="submit" class="btn btn-primary">
                   <i class="fa fa-trash"></i>
-                  Delete
-                </button>
+                    Delete
+                  </button>
+               </div>
               </form>
             </ul>
             </li>
