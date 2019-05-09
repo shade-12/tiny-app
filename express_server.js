@@ -117,7 +117,7 @@ app.post("/login", (req, res) => {
     if(!id){
       res.status(403).send("E-mail cannot be found!");
     }else{
-      if(req.body.password !== users[id].password){
+      if(!bcrypt.compareSync(req.body.password, users[id].password)){
         res.status(403).send("Invalid password!");
       }
       res.cookie("user_id", id);
@@ -153,6 +153,7 @@ app.post("/register", (req, res) => {
     users[id].password = hashedPassword;
     res.cookie("user_id", id);
     res.redirect("/urls");
+    console.log(users);
   }
 })
 
