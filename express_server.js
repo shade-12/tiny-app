@@ -122,7 +122,7 @@ app.post("/register", (req, res) => {
     users[id].email = req.body.email;
     users[id].password = req.body.password;
     res.cookie("user_id", id);
-    res.redirect('/urls/');
+    res.redirect('/urls');
   }
 })
 
