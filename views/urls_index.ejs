@@ -18,7 +18,7 @@
     <p>
       <h2>My URLs</h2>
 
-      <% if(urls){%>
+      <% if(user){%>
         <% for(var shorturl in urls){ %>
             <li>
               <strong><%= shorturl %></strong>
@@ -39,7 +39,11 @@
             </ul>
             </li>
         <% }%>
-      <% }%>
+      <% }else{%>
+      <p>
+        <h2>Oops! Looks like you have not login!</h2>
+      </p>
+      <%}%>
 
     </p>
 

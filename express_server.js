@@ -11,13 +11,26 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(morgan("dev"));
 
-const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
-};
+const urlDatabase = {};
+// const urlDatabase = {
+//   b6UTxQ: { longURL: "https://www.tsn.ca", userID: "aJ48lW" },
+//   i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW" }
+// };
 
 //object which stores and access users in the app
 const users = {};
+// const users = {
+//   "userRandomID": {
+//     id: "userRandomID",
+//     email: "user@example.com",
+//     password: "purple-monkey-dinosaur"
+//   },
+//  "user2RandomID": {
+//     id: "user2RandomID",
+//     email: "user2@example.com",
+//     password: "dishwasher-funk"
+//   }
+// }
 
 app.get("/", (req, res) => {
   if(req.cookies["user_id"]){
@@ -37,7 +50,7 @@ app.get("/hello", (req, res) => {
 
 app.get("/urls", (req, res) => {
   let templateVars = {
-    urls: urlDatabase,
+    urls: urlsForUser(req.cookies["user_id"]),
     user: userLookUp(req.cookies["user_id"])
   };
   res.render("urls_index", templateVars);
@@ -55,14 +68,16 @@ app.get("/urls/new", (req, res) => {
 //generate id for new URL which we receive from the form, then store them in urlDatabase
 app.post("/urls", (req, res) => {
   const id = generateRandomString();
-  urlDatabase[id] = req.body.longURL;
+  urlDatabase[id] = {};
+  urlDatabase[id].longURL = req.body.longURL;
+  urlDatabase[id].userID = req.cookies["user_id"];
   res.redirect('/urls/' + id);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
   let templateVars = {
+    urls: urlsForUser(req.cookies["user_id"]),
     shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL],
     user: userLookUp(req.cookies["user_id"])
   };
   res.render("urls_show", templateVars);
@@ -159,4 +174,14 @@ function userLookUp(userID){
       return users[id];
     }
   }
+}
+
+function urlsForUser(id){
+  const object = {};
+  for(let shortURL in urlDatabase){
+    if(urlDatabase[shortURL].userID === id){
+      object[shortURL] = urlDatabase[shortURL].longURL;
+    }
+  }
+  return object;
 }

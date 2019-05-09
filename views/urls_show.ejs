@@ -16,15 +16,26 @@
     <% include partials/_header %>
 
     <p>
-      <h2>TinyURL for <%= longURL %></h2>
-      <h4><%= shortURL %></h4>
-      <form class="form-inline" action="/urls/<%= shortURL %>" method="POST">
-      <div class="form-group mb-2">
-        <label for="newLongURL">Edit URL:</label>
-        <input class="form-control" type="text" name="newLongURL" placeholder=<%= longURL %> style="width: 300px; margin: 1em">
-        <button type="submit" class="btn btn-primary"><i class="fa fa-edit"></i>  Update</button>
-      </div>
-    </form>
+    <% if(user){%>
+      <% for(let shorturl in urls){%>
+        <% if(shortURL === shorturl){%>
+          <h2>TinyURL for <%= urls[shorturl] %></h2>
+            <h4><%= shortURL %></h4>
+              <form class="form-inline" action="/urls/<%= shortURL %>" method="POST">
+                <div class="form-group mb-2">
+                <label for="newLongURL">Edit URL:</label>
+                <input class="form-control" type="text" name="newLongURL" placeholder=<%= urls[shorturl] %> style="width: 300px; margin: 1em">
+                <button type="submit" class="btn btn-primary"><i class="fa fa-edit"></i>  Update</button>
+                </div>
+              </form>
+          <% break; } %>
+    <% } %>
+
+      <p>
+        <h2>Oops! This doesn't look like one of your URLs!</h2>
+      </p>
+
+      <%}%>
     </p>
 
 </body>
