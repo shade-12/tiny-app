@@ -16,6 +16,9 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+//object which stores and access users in the app
+const users = {};
+
 app.get("/", (req, res) => {
   if(req.cookies["username"]){
     res.redirect('/urls');
@@ -93,6 +96,16 @@ app.post("/logout", (req, res) => {
 
 app.get("/register", (req, res) => {
   res.render("register");
+})
+
+app.post("/register", (req, res) => {
+  const id = generateRandomString();
+  users[id] = {};
+  users[id].id = id;
+  users[id].email = req.body.email;
+  users[id].password = req.body.password;
+  res.cookie('user_id', id);
+  res.redirect('/urls/');
 })
 
 app.listen(PORT, () => {
