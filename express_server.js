@@ -17,7 +17,11 @@ const urlDatabase = {
 };
 
 app.get("/", (req, res) => {
-  res.send("Hello!");
+  if(req.cookies["username"]){
+    res.redirect('/urls');
+  }else{
+    res.redirect('/login');
+  }
 });
 
 app.get("/urls.json", (req, res) => {
@@ -86,6 +90,10 @@ app.post("/logout", (req, res) => {
   res.clearCookie('username');
   res.redirect('/urls');
 });
+
+app.get("/register", (req, res) => {
+  res.render("register");
+})
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
