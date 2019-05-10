@@ -17,8 +17,8 @@ app.use(morgan("dev"));
 
 const urlDatabase = {};
 // const urlDatabase = {
-//   b6UTxQ: { longURL: "https://www.tsn.ca", userID: "aJ48lW", date: ""},
-//   i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW", date: "" }
+//   b6UTxQ: { longURL: "https://www.tsn.ca", userID: "aJ48lW", date: "Friday, May 10, 2019", visits: 0},
+//   i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW", date: "Friday, May 10, 2019", visits: 0}
 // };
 
 //object which stores and access users in the app
@@ -47,9 +47,10 @@ app.get("/", (req, res) => {
 app.get("/urls", (req, res) => {
   let templateVars = {
     urls: urlsForUser(req.session.user_id),
-    user: userLookUp(req.session.user_id)
+    user: userLookUp(req.session.user_id),
   };
   res.render("urls_index", templateVars);
+  console.log(templateVars.urls)
 });
 
 app.get("/urls/new", (req, res) => {
@@ -73,9 +74,9 @@ app.post("/urls", (req, res) => {
   urlDatabase[id] = {};
   urlDatabase[id].longURL = req.body.longURL;
   urlDatabase[id].userID = req.session.user_id;
+  urlDatabase[id].visits = 0;
   urlDatabase[id].date = new Date().toLocaleString("en-us", options);
   res.redirect('/urls/' + id);
-  console.log(urlDatabase);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
@@ -96,20 +97,20 @@ app.post("/urls/:shortURL", (req, res) => {
   }else{
     res.redirect("/login");
   }
-})
+});
 
 //short URL can be accessed by anyone, even if users are not logged in
 app.get("/u/:shortURL", (req, res) => {
   const shorturl = req.params.shortURL;
-  let count = 0;
   for(let id in urlDatabase){
     if(id === shorturl){
+      urlDatabase[id].visits ++;
       const longurl = urlDatabase[id].longURL;
       res.redirect(longurl);
     }
   }
-    res.send("<h1>Can't find what you are looking for :|</h1>");
-})
+  res.send("<h1>Can't find what you are looking for :|</h1>");
+});
 
 //delete an url from urlDatabase
 //then redirect client back to index page
@@ -120,22 +121,22 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   }else{
     res.redirect("/login");
   }
-})
+});
 
 //set a cookie named user_id to the value submitted in the request body via the login form.
 // redirect the browser back to the /urls page
 app.post("/login", (req, res) => {
   let id = emailExists(req.body.email);
-    if(!id){
-      res.status(403).send("<h1>E-mail cannot be found :|</h1>");
-    }else{
-      if(!bcrypt.compareSync(req.body.password, users[id].password)){
-        res.status(403).send("<h1>Invalid password :|</h1>");
-      }
-      req.session.user_id = id;
-      res.redirect("/urls");
-     }
-  });
+  if(!id){
+    res.status(403).send("<h1>E-mail cannot be found :|</h1>");
+  }else{
+    if(!bcrypt.compareSync(req.body.password, users[id].password)){
+      res.status(403).send("<h1>Invalid password :|</h1>");
+    }
+    req.session.user_id = id;
+    res.redirect("/urls");
+  }
+});
 
 app.get("/login", (req, res) => {
   if(req.session.user_id){
@@ -144,7 +145,7 @@ app.get("/login", (req, res) => {
     let templateVars = {user: userLookUp(req.session.user_id)};
     res.render("login", templateVars);
   }
-})
+});
 
 app.post("/logout", (req, res) => {
   req.session = null;
@@ -155,10 +156,10 @@ app.get("/register", (req, res) => {
   if(req.session.user_id){
     res.redirect("/urls");
   }else{
-  let templateVars = {user: userLookUp(req.session.user_id)};
-  res.render("register", templateVars);
+    let templateVars = {user: userLookUp(req.session.user_id)};
+    res.render("register", templateVars);
   }
-})
+});
 
 app.post("/register", (req, res) => {
   if(req.body.email === "" || req.body.password === "" || emailExists(req.body.email)){
@@ -178,7 +179,7 @@ app.post("/register", (req, res) => {
     req.session.user_id = id;
     res.redirect("/urls");
   }
-})
+});
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
@@ -218,6 +219,7 @@ function urlsForUser(id){
       object[shortURL] = {};
       object[shortURL].longURL = urlDatabase[shortURL].longURL;
       object[shortURL].date = urlDatabase[shortURL].date;
+      object[shortURL].visits = urlDatabase[shortURL].visits;
     }
   }
   return object;
