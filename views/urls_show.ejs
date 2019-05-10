@@ -18,8 +18,9 @@
     <% if(user){ let count = 0; %>
       <% for(let shorturl in urls){ %>
         <% if(shortURL === shorturl){ %>
-          <h2>TinyURL for <%= urls[shorturl] %> : </h2>
+          <h2>TinyURL for <%= urls[shorturl].longURL %> : </h2>
             <h4><%= shortURL %></h4>
+            <p><h4>Created on <%= urls[shorturl].date %></h4></p>
               <form class="form-inline" action="/urls/<%= shortURL %>" method="POST">
                 <div class="form-group mb-2">
                   <label for="newLongURL">Edit URL:</label>

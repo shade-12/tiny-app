@@ -17,8 +17,8 @@ app.use(morgan("dev"));
 
 const urlDatabase = {};
 // const urlDatabase = {
-//   b6UTxQ: { longURL: "https://www.tsn.ca", userID: "aJ48lW" },
-//   i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW" }
+//   b6UTxQ: { longURL: "https://www.tsn.ca", userID: "aJ48lW", date: ""},
+//   i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW", date: "" }
 // };
 
 //object which stores and access users in the app
@@ -67,7 +67,9 @@ app.post("/urls", (req, res) => {
   urlDatabase[id] = {};
   urlDatabase[id].longURL = req.body.longURL;
   urlDatabase[id].userID = req.session.user_id;
+  urlDatabase[id].date = Date();
   res.redirect('/urls/' + id);
+  console.log(urlDatabase);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
@@ -207,7 +209,9 @@ function urlsForUser(id){
   const object = {};
   for(let shortURL in urlDatabase){
     if(urlDatabase[shortURL].userID === id){
-      object[shortURL] = urlDatabase[shortURL].longURL;
+      object[shortURL] = {};
+      object[shortURL].longURL = urlDatabase[shortURL].longURL;
+      object[shortURL].date = urlDatabase[shortURL].date;
     }
   }
   return object;
