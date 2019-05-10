@@ -37,7 +37,7 @@ const users = {};
 // }
 
 app.get("/", (req, res) => {
-  if(req.session["user_id"]){
+  if(req.session.user_id){
     res.redirect("/urls");
   }else{
     res.redirect("/login");
@@ -64,10 +64,16 @@ app.get("/urls/new", (req, res) => {
 //generate id for new URL which we receive from the form, then store them in urlDatabase
 app.post("/urls", (req, res) => {
   const id = generateRandomString();
+  let options = {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  };
   urlDatabase[id] = {};
   urlDatabase[id].longURL = req.body.longURL;
   urlDatabase[id].userID = req.session.user_id;
-  urlDatabase[id].date = Date();
+  urlDatabase[id].date = new Date().toLocaleString("en-us", options);
   res.redirect('/urls/' + id);
   console.log(urlDatabase);
 });
