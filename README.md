@@ -5,11 +5,11 @@ TinyApp is a full stack web application built with Node and Express that allows 
 
 ## Final Product
 
-!["Screenshot of URLs page"](https://github.com/shadeying/TinyApp/blob/master/docs/urls-page.png?raw=true)
+![Screenshot of URLs page](https://github.com/shadeying/TinyApp/blob/master/docs/urls-page.png?raw=true)
 
-!["There is also *UPDATE* feature for existing link"](https://github.com/shadeying/TinyApp/blob/master/docs/url-show.png?raw=true)
+![There is also *UPDATE* feature for existing link](https://github.com/shadeying/TinyApp/blob/master/docs/url-show.png?raw=true)
 
-!["And the others *CAN'T* edit/delete your URLs"](https://github.com/shadeying/TinyApp/blob/master/docs/url-error.png?raw=true)
+![And the others *CAN'T* edit/delete your URLs](https://github.com/shadeying/TinyApp/blob/master/docs/url-error.png?raw=true)
 
 ## Cool Features :sunglasses:
 
