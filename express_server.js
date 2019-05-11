@@ -129,7 +129,11 @@ app.get("/u/:shortURL", (req, res) => {
         req.session.visitor_id = visitorID;
       }
       urlDatabase[id].visits ++;
-      visitors[req.session.visitor_id][id].push(new Date().toLocaleString("en-us", options));
+      if(!visitors[req.session.visitor_id][id]){
+        visitors[req.session.visitor_id][id] = [new Date().toLocaleString("en-us", options)];
+      }else{
+        visitors[req.session.visitor_id][id].push(new Date().toLocaleString("en-us", options));
+      }
       const longurl = urlDatabase[id].longURL;
       res.redirect(longurl);
     }
