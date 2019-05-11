@@ -23,6 +23,7 @@
             <p>TinyURL : <strong><%= shortURL %></strong></p>
             <p>Created on : <%= urls[shorturl].date %></p>
             <p>Number of visits : <%= urls[shorturl].visits %></p>
+            <p>Number of visitors : <%= numberOfVisitors %></p>
             <p>Visit history: </p>
             <ul>
               <% for(let visitorID in visitors){ %>

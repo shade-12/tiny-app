@@ -17,8 +17,8 @@ app.use(morgan("dev"));
 
 const urlDatabase = {};
 // const urlDatabase = {
-//   b6UTxQ: { longURL: "https://www.tsn.ca", userID: "aJ48lW", date: "Friday, May 10, 2019", visits: 0},
-//   i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW", date: "Friday, May 10, 2019", visits: 0}
+//   b6UTxQ: { longURL: "https://www.tsn.ca", userID: "aJ48lW", date: "Friday, May 10, 2019", visits: 0, visitors: 2},
+//   i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW", date: "Friday, May 10, 2019", visits: 0, visitors: 1}
 // };
 
 //object which stores and access users in the app
@@ -93,7 +93,8 @@ app.get("/urls/:shortURL", (req, res) => {
     shortURL: req.params.shortURL,
     user: userLookUp(req.session.user_id),
     allURLs: urlDatabase,
-    visitors: shortURLvisitHistory(req.params.shortURL)
+    visitors: shortURLvisitHistory(req.params.shortURL),
+    numberOfVisitors: uniqueVisitorsCounter(shortURLvisitHistory(req.params.shortURL))
   };
   res.render("urls_show", templateVars);
 });
@@ -270,7 +271,13 @@ function shortURLvisitHistory(shorturl){
 //     ghU8y6 : ["Saturday, May 11, 2019"]
 //   }
 
-
+function uniqueVisitorsCounter(obj){
+  let count = 0;
+  for(let visitorID in obj){
+    count ++;
+  }
+  return count;
+}
 
 
 
