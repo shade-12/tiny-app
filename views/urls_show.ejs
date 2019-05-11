@@ -23,6 +23,13 @@
             <p>TinyURL : <strong><%= shortURL %></strong></p>
             <p>Created on : <%= urls[shorturl].date %></p>
             <p>Number of visits : <%= urls[shorturl].visits %></p>
+            <p>Visit history: </p>
+            <ul>
+              <% for(let visitorID in visitors){ %>
+                <% for(let i = 0; i < visitors[visitorID].length; i++){ %>
+                  <p>Visitor ID: <%= visitorID %> | Time: <%= visitors[visitorID][i] %></p>
+              <% }} %>
+            </ul>
           </h4>
               <form class="form-inline" action="/urls/<%= shortURL %>" method="POST">
                 <div class="form-group mb-2">

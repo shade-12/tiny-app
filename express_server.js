@@ -36,6 +36,14 @@ const users = {};
 //   }
 // }
 
+const visitors = {};
+// const visitors = {
+//   "visitorRandomID": {
+//     b6UTxQ: ["Friday, May 10, 2019", "Monday, May 13, 2019"],
+//     i3BoGr: ["Friday, May 10, 2019"]
+//    }
+// }
+
 app.get("/", (req, res) => {
   if(req.session.user_id){
     res.redirect("/urls");
@@ -84,7 +92,8 @@ app.get("/urls/:shortURL", (req, res) => {
     urls: urlsForUser(req.session.user_id),
     shortURL: req.params.shortURL,
     user: userLookUp(req.session.user_id),
-    allURLs: urlDatabase
+    allURLs: urlDatabase,
+    visitors: shortURLvisitHistory(req.params.shortURL)
   };
   res.render("urls_show", templateVars);
 });
@@ -102,9 +111,25 @@ app.post("/urls/:shortURL", (req, res) => {
 //short URL can be accessed by anyone, even if users are not logged in
 app.get("/u/:shortURL", (req, res) => {
   const shorturl = req.params.shortURL;
+  const options = {
+          weekday: "long",
+          year: "numeric",
+          month: "numeric",
+          day: "numeric",
+          hour: "numeric",
+          minute: "2-digit",
+          second: "2-digit"
+        };
   for(let id in urlDatabase){
     if(id === shorturl){
+      if(!req.session.visitor_id){
+        const visitorID = generateRandomString();
+        visitors[visitorID] = {};
+        visitors[visitorID][id] = [];
+        req.session.visitor_id = visitorID;
+      }
       urlDatabase[id].visits ++;
+      visitors[req.session.visitor_id][id].push(new Date().toLocaleString("en-us", options));
       const longurl = urlDatabase[id].longURL;
       res.redirect(longurl);
     }
@@ -123,7 +148,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   }
 });
 
-//set a cookie named user_id to the value submitted in the request body via the login form.
+//set a session cookie named user_id for successful login
 // redirect the browser back to the /urls page
 app.post("/login", (req, res) => {
   let id = emailExists(req.body.email);
@@ -224,3 +249,27 @@ function urlsForUser(id){
   }
   return object;
 }
+
+function shortURLvisitHistory(shorturl){
+  const obj = {};
+  for(let id in visitors){
+    for(let url in visitors[id]){
+      if(url === shorturl){
+        obj[id] = visitors[id][url];
+      }
+    }
+  }
+  return obj;
+}
+// //obj = {
+//     ab7yhG : ["Friday, May 10, 2019", "Monday, May 13, 2019"],
+//     ghU8y6 : ["Saturday, May 11, 2019"]
+//   }
+
+
+
+
+
+
+
+
