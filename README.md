@@ -10,6 +10,13 @@ TinyApp is a full stack web application built with Node and Express that allows 
 
 !["And the others *CAN'T* edit/delete your URLs"](https://github.com/shadeying/TinyApp/blob/master/docs/url-error.png?raw=true)
 
+## Cool Features :sunglasses:
+
+- Only *YOU* can edit/delete your own TinyURLs that you have created.
+- The date of the TinyURL created is displayed.
+- The number of times the TinyURL was visited is shown too!
+- Visitors record with their unique IDs and date are available as well.
+
 ## Dependencies
 
 - Node.js
