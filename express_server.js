@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cookieSession = require("cookie-session");
 const bcrypt = require("bcrypt");
+const methodOverride = require("method-override");
 const morgan = require("morgan");
 const app = express();
 const PORT = 8080; // default port 8080
@@ -13,6 +14,7 @@ app.use(cookieSession({
   name: "session",
   keys: ["pizza"]
 }));
+app.use(methodOverride("_method"));
 app.use(morgan("dev"));
 
 const urlDatabase = {};
@@ -99,7 +101,7 @@ app.get("/urls/:shortURL", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
-app.post("/urls/:shortURL", (req, res) => {
+app.put("/urls/:shortURL", (req, res) => {
   if(req.session.user_id){
     const newLongURL = req.body.newLongURL;
     urlDatabase[req.params.shortURL].longURL = newLongURL;
@@ -144,7 +146,7 @@ app.get("/u/:shortURL", (req, res) => {
 
 //delete an url from urlDatabase
 //then redirect client back to index page
-app.post("/urls/:shortURL/delete", (req, res) => {
+app.delete("/urls/:shortURL", (req, res) => {
   if(req.session.user_id){
     delete urlDatabase[req.params.shortURL];
     res.redirect("/urls");
